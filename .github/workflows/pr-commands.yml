@@ -70,4 +70,4 @@ jobs:
           body: |
             Autoformatting failed! ❌
 
-            For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            For more details, see the job output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/${{ github.job }}

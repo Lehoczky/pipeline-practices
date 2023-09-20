@@ -22,7 +22,6 @@ jobs:
         uses: myrotvorets/set-commit-status-action@master
         with:
           sha: ${{ steps.comment-branch.outputs.head_sha }}
-          token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
 
       - name: Check out Git repository

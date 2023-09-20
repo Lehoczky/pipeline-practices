@@ -14,29 +14,29 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.issue.pull_request && contains(github.event.comment.body, '/trigger')
     steps:
-      - name: 🌿 Get PR branch
+      - name: Get PR branch 🌿
         uses: xt0rted/pull-request-comment-branch@v2
         id: comment-branch
 
-      - name: 🟡 Set latest commit status as pending
+      - name: Set latest commit status as pending 🟡
         uses: myrotvorets/set-commit-status-action@master
         with:
           sha: ${{ steps.comment-branch.outputs.head_sha }}
           status: pending
 
-      - name: 📄 Create comment
+      - name: Create comment 📄
         uses: peter-evans/create-or-update-comment@v3
         id: create-comment
         with:
           issue-number: ${{ github.event.issue.number }}
           body: Autoformatting files started 🔨
 
-      - name: ⏬ Check out Git repository
+      - name: Check out Git repository ⏬
         uses: actions/checkout@v3
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
 
-      - name: 👍 React with thumps up to comment
+      - name: React with thumps up to comment 👍
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ github.event.comment.id }}
@@ -48,7 +48,7 @@ jobs:
       - name: LS
         run: ls
 
-      - name: ⚫ Set latest commit status as ${{ job.status }}
+      - name: Set latest commit status as ${{ job.status }} ⚫
         uses: myrotvorets/set-commit-status-action@master
         if: always()
         with:
@@ -56,7 +56,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
 
-      - name: 📄 Create success comment
+      - name: Create success comment 📄
         uses: peter-evans/create-or-update-comment@v3
         if: success()
         with:
@@ -64,7 +64,7 @@ jobs:
           comment-id: ${{ steps.create-comment.outputs.comment-id }}
           body: Autoformatting done! 🚀
 
-      - name: 📄 Create failure comment
+      - name: Create failure comment 📄
         uses: peter-evans/create-or-update-comment@v3
         if: failure()
         with:

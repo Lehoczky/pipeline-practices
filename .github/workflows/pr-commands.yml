@@ -52,7 +52,7 @@ jobs:
           cache: pnpm
 
       - name: Format files ✨
-        run: pnpm format:write
+        run: pnpm format:fix
 
       - name: Commit changes 🔼
         uses: stefanzweifel/git-auto-commit-action@v4

@@ -51,6 +51,9 @@ jobs:
           node-version: 18
           cache: pnpm
 
+      - name: Install dependencies 💤
+        run: pnpm install
+
       - name: Format files ✨
         run: pnpm format:fix
 
@@ -76,7 +79,7 @@ jobs:
           comment-id: ${{ steps.create-comment.outputs.comment-id }}
           body: Autoformatting done! 🚀
 
-      - name: Create success comment 📄
+      - name: Create cancellation comment 📄
         uses: peter-evans/create-or-update-comment@v3
         if: cancelled()
         with:

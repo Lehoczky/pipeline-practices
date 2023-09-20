@@ -64,6 +64,14 @@ jobs:
           comment-id: ${{ steps.create-comment.outputs.comment-id }}
           body: Autoformatting done! 🚀
 
+      - name: Create success comment 📄
+        uses: peter-evans/create-or-update-comment@v3
+        if: cancelled()
+        with:
+          edit-mode: replace
+          comment-id: ${{ steps.create-comment.outputs.comment-id }}
+          body: Autoformatting cancelled! ⚠
+
       - name: Create failure comment 📄
         uses: peter-evans/create-or-update-comment@v3
         if: failure()

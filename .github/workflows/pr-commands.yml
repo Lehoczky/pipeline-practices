@@ -29,11 +29,11 @@ jobs:
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
 
-      - name: Echo ls
-        run: ls
-
-      - name: Echo branch name
-        run: echo ${{steps.comment-branch.outputs.head_ref}}
+      - name: React with thumps up to comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: "+1"
 
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master

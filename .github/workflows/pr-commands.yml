@@ -42,8 +42,11 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: "+1"
 
-      - name: Try to fail
-        run: exit 1
+      - name: Create file
+        run: touch hello.txt
+
+      - name: LS
+        run: ls
 
       - name: ⚫ Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@master

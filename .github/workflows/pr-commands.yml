@@ -54,6 +54,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v3
         if: success()
         with:
+          edit-mode: replace
           comment-id: ${{ steps.create-comment.outputs.comment-id }}
           body: Autoformatting done! 🚀
 
@@ -61,6 +62,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v3
         if: failure()
         with:
+          edit-mode: replace
           comment-id: ${{ steps.create-comment.outputs.comment-id }}
           body: |
             Autoformatting failed! ❌

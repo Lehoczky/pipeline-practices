@@ -34,3 +34,11 @@ jobs:
 
       - name: Echo branch name
         run: echo ${{steps.comment-branch.outputs.head_ref}}
+
+      - name: Set latest commit status as ${{ job.status }}
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}

@@ -24,6 +24,13 @@ jobs:
           sha: ${{ steps.comment-branch.outputs.head_sha }}
           status: pending
 
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v3
+        id: create-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: Starting Job
+
       - name: Check out Git repository
         uses: actions/checkout@v3
         with:

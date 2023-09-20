@@ -12,7 +12,7 @@ jobs:
   prettier:
     name: Format files with prettier
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/trigger')
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/trigger')
     steps:
       - name: Get PR branch 🌿
         uses: xt0rted/pull-request-comment-branch@v2

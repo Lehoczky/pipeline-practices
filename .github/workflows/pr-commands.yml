@@ -24,7 +24,7 @@ jobs:
           sha: ${{ steps.comment-branch.outputs.head_sha }}
           status: pending
 
-      - name: Create comment 📄
+      - name: Create initial comment 📄
         uses: peter-evans/create-or-update-comment@v3
         id: create-comment
         with:
@@ -42,11 +42,17 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: "+1"
 
-      - name: Create file
-        run: touch hello.txt
+      - name: Enable Corepack
+        run: corepack enable
 
-      - name: LS
-        run: ls
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Format files ✨
+        run: pnpm format:write
 
       - name: Commit changes 🔼
         uses: stefanzweifel/git-auto-commit-action@v4

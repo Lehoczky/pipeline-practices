@@ -1,0 +1,11 @@
+{
+  "name": "pipeline-practices",
+  "private": true,
+  "scripts": {
+    "format:fix": "prettier . --write --ignore-unknown"
+  },
+  "devDependencies": {
+    "@lehoczky/prettier-config": "^1.0.1",
+    "prettier": "^3.0.3"
+  }
+}

@@ -11,6 +11,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies 💤
+        run: pnpm install
+
+      - name: Run linting 🧹
+        run: pnpm lint
+
   test:
     name: Test
     runs-on: ubuntu-latest

@@ -2,10 +2,15 @@
   "name": "pipeline-practices",
   "private": true,
   "scripts": {
-    "format:fix": "prettier . --write --ignore-unknown"
+    "format:fix": "prettier . --write --ignore-unknown",
+    "jest": "jest"
   },
   "devDependencies": {
     "@lehoczky/prettier-config": "^1.0.1",
-    "prettier": "^3.0.3"
+    "@types/jest": "^29.5.5",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1"
   }
 }

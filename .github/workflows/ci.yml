@@ -70,7 +70,10 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: test-failure
-          message: Tests failied ❌
+          message: |
+            Tests failied ❌
+
+            For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           recreate: true
 
       - name: "Remove last test failure message"

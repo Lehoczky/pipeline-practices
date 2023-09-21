@@ -70,3 +70,4 @@ jobs:
         with:
           header: test-report
           message: Tests failied ❌
+          recreate: true

@@ -76,9 +76,13 @@ jobs:
             For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           recreate: true
 
-      - name: "Remove last test failure message"
+      - name: Remove last test failure message
         if: ${{ needs.test.result != 'failure' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: test-failure
           delete: true
+
+      - name: Propogate error status if tests failed
+        if: ${{ needs.test.result == 'failure' }}
+        run: exit 1

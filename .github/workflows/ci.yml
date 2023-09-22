@@ -49,7 +49,7 @@ jobs:
         with:
           header: test-failure
           message: |
-            Tests failied ❌
+            Tests failied 🧪 ❌
 
             For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           recreate: true

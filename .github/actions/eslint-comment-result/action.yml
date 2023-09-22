@@ -1,0 +1,11 @@
+name: Eslint Comment Result
+description: A GitHub action which comments the result of an eslint run to your PR.
+
+inputs:
+  eslint-output-path:
+    description: Path to the eslint out file, which is in json format
+    required: true
+
+runs:
+  using: node16
+  main: dist/index.js

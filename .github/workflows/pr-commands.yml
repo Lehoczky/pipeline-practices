@@ -94,6 +94,6 @@ jobs:
           edit-mode: replace
           comment-id: ${{ steps.create-comment.outputs.comment-id }}
           body: |
-            Autoformatting failed! 🧹 ❌
+            Autoformatting failed! ❌
 
             For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

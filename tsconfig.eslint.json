@@ -2,5 +2,5 @@
   "compilerOptions": {
     "allowJs": true
   },
-  "include": ["src/**/*", "tests/**/*", "./*"]
+  "include": ["src/**/*", "tests/**/*", "./*", ".github/actions/**/*"]
 }

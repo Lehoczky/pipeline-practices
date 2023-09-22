@@ -39,56 +39,49 @@ jobs:
         with:
           eslint-output-path: eslint-report.json
 
-  # test:
-  #   name: Test
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       shard: [1, 2]
-  #   steps:
-  #     - name: Check out Git repository ⏬
-  #       uses: actions/checkout@v3
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+      - name: Install dependencies 💤
+        run: pnpm install
+      - name: Run tests 🧪
+        run: pnpm jest --shard=${{ matrix.shard }}/2
 
-  #     - name: Enable Corepack
-  #       run: corepack enable
-
-  #     - name: Set up Node.js 💿
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18
-  #         cache: pnpm
-
-  #     - name: Install dependencies 💤
-  #       run: pnpm install
-
-  #     - name: Run tests 🧪
-  #       run: pnpm jest --shard=${{ matrix.shard }}/2
-
-  # test-complete:
-  #   name: Report test results
-  #   runs-on: ubuntu-latest
-  #   needs: [test]
-  #   if: always()
-  #   steps:
-  #     - name: Report failure
-  #       if: ${{ needs.test.result == 'failure' }}
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: test-failure
-  #         message: |
-  #           Tests failied ❌
-
-  #           For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-  #         recreate: true
-
-  #     - name: Remove last test failure message
-  #       if: ${{ needs.test.result != 'failure' }}
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: test-failure
-  #         delete: true
-
-  #     - name: Propogate error status if tests failed
-  #       if: ${{ needs.test.result == 'failure' }}
-  #       run: exit 1
+  test-complete:
+    name: Report test results
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: always()
+    steps:
+      - name: Report failure
+        if: ${{ needs.test.result == 'failure' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: test-failure
+          message: |
+            Tests failied ❌
+            For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          recreate: true
+      - name: Remove last test failure message
+        if: ${{ needs.test.result != 'failure' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: test-failure
+          delete: true
+      - name: Propogate error status if tests failed
+        if: ${{ needs.test.result == 'failure' }}
+        run: exit 1

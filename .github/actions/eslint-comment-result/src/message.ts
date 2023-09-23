@@ -68,15 +68,16 @@ function createTitle({
   const eslintIcon = createImage({
     src: "https://api.iconify.design/logos:eslint.svg",
     align: "top",
+    width: 24,
   })
 
   if (hasErrorsAndWarnings) {
-    return `${eslintIcon} **Lint errors and warning have been found in the codebase ❗**`
+    return `### ${eslintIcon} Lint errors and warning have been found in the codebase ❗`
   }
   if (hasOnlyErrors) {
-    return `${eslintIcon} **Lint errors have been found in the codebase ❗**`
+    return `### ${eslintIcon} Lint errors have been found in the codebase ❗`
   }
-  return `${eslintIcon} **Lint warnings have been found in the codebase ⚠**`
+  return `### ${eslintIcon} Lint warnings have been found in the codebase ⚠`
 }
 
 function createCodeBlockWithESLintOutput(results: ESLint.LintResult[]) {
@@ -117,7 +118,7 @@ function createFooter(accumulatedResults: AccumulatedResults) {
     return "Please fix these errors locally, and commit the changes to the PR^^"
   }
   if (accumulatedResults.hasOnlyWarnings) {
-    return "Please warning these errors locally, and commit the changes to the PR^^"
+    return "Please fix these warnings locally, and commit the changes to the PR^^"
   }
   throw new Error(
     "None of the scenarios has been encountered in the `createFooter() function, but they should exhaust every possible option.`",

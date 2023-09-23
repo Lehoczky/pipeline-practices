@@ -6,6 +6,10 @@ inputs:
     description: Path to the eslint out file, which is in json format
     required: true
 
+outputs:
+  message:
+    description: GitHub message body in markdown
+
 runs:
   using: node16
   main: dist/index.js

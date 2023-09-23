@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  STICKY_TEST_MESSAGE_ID: test-failure
+
 jobs:
   lint:
     name: Lint
@@ -24,17 +27,19 @@ jobs:
       - name: Set up Node.js 💿
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies 💤
         run: pnpm install
 
       - name: Run linting 🧹
+        id: linting
         run: pnpm lint --output-file=eslint-report.json --format=json
 
       - name: Comment about lint results
-        if: always()
+        if: ${{steps.linting.outcome == 'failure' }}
+        id: lint-comment
         uses: ./.github/actions/eslint-comment-result
         with:
           eslint-output-path: eslint-report.json
@@ -63,7 +68,7 @@ jobs:
         run: pnpm install
 
       - name: Run tests 🧪
-        run: pnpm jest --shard=${{ matrix.shard }}/2
+        run: pnpm -F app jest --shard=${{ matrix.shard }}/2
 
   test-complete:
     name: Report test results
@@ -75,7 +80,7 @@ jobs:
         if: ${{ needs.test.result == 'failure' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: test-failure
+          header: ${{ env.STICKY_TEST_MESSAGE_ID }}
           message: |
             Tests failied 🧪 ❌
 
@@ -86,7 +91,7 @@ jobs:
         if: ${{ needs.test.result != 'failure' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: test-failure
+          header: ${{ env.STICKY_TEST_MESSAGE_ID }}
           delete: true
 
       - name: Propogate error status if tests failed

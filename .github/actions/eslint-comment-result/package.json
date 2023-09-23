@@ -1,9 +1,8 @@
 {
   "name": "eslint-comment-result",
   "private": true,
-  "description": "",
   "scripts": {
-    "build": "ncc build src/index.ts"
+    "build": "ncc build src/index.ts --minify"
   },
   "exports": {
     ".": "./dist/index.js"

@@ -14,11 +14,12 @@ export function createMessage(results: ESLint.LintResult[]) {
   }
 
   const title = createTitle(accumulatedResults)
+  const subtitle = "Well, this is unfortunate:( But fear not, we got your back!"
   const codeBlockWithEslintOutput =
     createCodeBlockWithESLintOutput(problematicFiles)
   const footer = createFooter(accumulatedResults)
 
-  return `${title}\n\n${codeBlockWithEslintOutput}\n\n${footer}`
+  return `${title}\n\n${subtitle}\n\n${codeBlockWithEslintOutput}\n\n${footer}`
 }
 
 interface AccumulatedResults {
@@ -62,7 +63,7 @@ function createTitle({
   const eslintIcon = `<img src="https://api.iconify.design/logos:eslint.svg" align="top" width="24">`
 
   if (hasErrorsAndWarnings) {
-    return `### ${eslintIcon} Lint errors and warning have been found in the codebase ❗`
+    return `### ${eslintIcon} Lint errors and warnings have been found in the codebase ❗`
   }
   if (hasOnlyErrors) {
     return `### ${eslintIcon} Lint errors have been found in the codebase ❗`

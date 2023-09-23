@@ -147,6 +147,8 @@ jobs:
           message: |
             ### <img src="https://api.iconify.design/logos:prettier.svg" height="24" align="top" /> Formatting Errors Found ❌
 
+            Well, gosh darnit! Don't worry though, we will try to help you out!
+
             You can do one of the following things to solve the issue, feel free to choose based on which one is more convenient for you:
             - run `npm run format:fix` locally and commit the changes
             - if you are using [VSCode](https://code.visualstudio.com/), open the files with the errors, open the [command palette](https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_command-palette) and run the `Format Document` command

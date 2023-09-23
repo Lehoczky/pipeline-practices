@@ -149,6 +149,8 @@ jobs:
 
             Well, gosh darnit! Don't worry though, we will try to help you out!
 
+            To see which files are unformatted, look at the workflow details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
             You can do one of the following things to solve the issue, feel free to choose based on which one is more convenient for you:
             - run `npm run format:fix` locally and commit the changes
             - if you are using [VSCode](https://code.visualstudio.com/), open the files with the errors, open the [command palette](https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_command-palette) and run the `Format Document` command

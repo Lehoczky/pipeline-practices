@@ -14,12 +14,11 @@ export function createMessage(results: ESLint.LintResult[]) {
   }
 
   const title = createTitle(accumulatedResults)
-  const subtitle = "Well, this is unfortunate:( But fear not, we got your back!"
   const codeBlockWithEslintOutput =
     createCodeBlockWithESLintOutput(problematicFiles)
   const footer = createFooter(accumulatedResults)
 
-  return `${title}\n\n${subtitle}\n\n${codeBlockWithEslintOutput}\n\n${footer}`
+  return `${title}\n\n${codeBlockWithEslintOutput}\n\n${footer}`
 }
 
 interface AccumulatedResults {

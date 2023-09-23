@@ -26,7 +26,7 @@ export async function run() {
     const eslintResults: ESLint.LintResult[] = JSON.parse(eslintOutputText)
     core.info(`Found ESLint output:\ ${JSON.stringify(eslintResults, null, 2)}`)
 
-    const message = await createMessage(eslintResults)
+    const message = createMessage(eslintResults)
 
     core.setOutput("message", message)
   } catch (error) {

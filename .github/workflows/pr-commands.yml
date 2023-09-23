@@ -12,7 +12,7 @@ jobs:
   prettier:
     name: Format files with prettier
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/ci-format')
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/ci-autofix-format')
     steps:
       - name: Get PR branch 🌿
         uses: xt0rted/pull-request-comment-branch@v2
@@ -48,7 +48,7 @@ jobs:
       - name: Set up Node.js 💿
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies 💤
@@ -95,5 +95,94 @@ jobs:
           comment-id: ${{ steps.create-comment.outputs.comment-id }}
           body: |
             Autoformatting failed! ❌
+
+            For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+  eslint:
+    name: Fix automatically fixable errors with ESLint
+    runs-on: ubuntu-latest
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/ci-autofix-lint')
+    steps:
+      - name: Get PR branch 🌿
+        uses: xt0rted/pull-request-comment-branch@v2
+        id: comment-branch
+
+      - name: Set latest commit status as pending 🟡
+        uses: myrotvorets/set-commit-status-action@master
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          status: pending
+
+      - name: Create initial comment 📄
+        uses: peter-evans/create-or-update-comment@v3
+        id: create-comment
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: Started fixing lint errors 🔨
+
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.comment-branch.outputs.head_ref }}
+
+      - name: React with thumps up to comment 👍
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: "+1"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies 💤
+        run: pnpm install
+
+      - name: Format files ✨
+        run: pnpm lint:fix
+
+      - name: Commit changes 🔼
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: ${{ steps.comment-branch.outputs.head_ref }}
+          commit_message: "chore: fix auto-fixable lint errors"
+
+      - name: Set latest commit status as ${{ job.status }} ⚫
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+
+      - name: Create success comment 📄
+        uses: peter-evans/create-or-update-comment@v3
+        if: success()
+        with:
+          edit-mode: replace
+          comment-id: ${{ steps.create-comment.outputs.comment-id }}
+          body: Fixing lint errors done! 🚀
+
+      - name: Create cancellation comment 📄
+        uses: peter-evans/create-or-update-comment@v3
+        if: cancelled()
+        with:
+          edit-mode: replace
+          comment-id: ${{ steps.create-comment.outputs.comment-id }}
+          body: Auto-fixing lint errors cancelled! ⚠
+
+      - name: Create failure comment 📄
+        uses: peter-evans/create-or-update-comment@v3
+        if: failure()
+        with:
+          edit-mode: replace
+          comment-id: ${{ steps.create-comment.outputs.comment-id }}
+          body: |
+            Fixing lint errors failed! ❌
 
             For more details, see the workflow output: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

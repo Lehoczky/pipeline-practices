@@ -2,8 +2,10 @@
   "name": "pipeline-practices",
   "private": true,
   "scripts": {
+    "format:check": "prettier . --check --ignore-unknown",
     "format:fix": "prettier . --write --ignore-unknown",
-    "lint": "eslint ./app/src --ext .js,.ts --max-warnings=0"
+    "lint:check": "eslint ./app/src --ext .js,.ts --max-warnings=0",
+    "lint:fix": "eslint ./app/src --ext .js,.ts --max-warnings=0 --fix"
   },
   "devDependencies": {
     "@lehoczky/eslint-config-typescript": "^0.0.3",

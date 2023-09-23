@@ -36,7 +36,7 @@ jobs:
 
       - name: Run linting 🧹
         id: linting
-        run: pnpm lint --output-file=eslint-report.json --format=json
+        run: pnpm lint:check --output-file=eslint-report.json --format=json
 
       - name: Generate comment about lint results
         if: always() && steps.linting.outcome == 'failure'

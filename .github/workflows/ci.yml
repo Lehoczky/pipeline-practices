@@ -11,6 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  STICKY_LINT_MESSAGE_ID: lint-failure
   STICKY_TEST_MESSAGE_ID: test-failure
 
 jobs:
@@ -38,11 +39,26 @@ jobs:
         run: pnpm lint --output-file=eslint-report.json --format=json
 
       - name: Comment about lint results
-        if: ${{steps.linting.outcome == 'failure' }}
+        if: ${{ steps.linting.outcome == 'failure' }}
         id: lint-comment
         uses: ./.github/actions/eslint-comment-result
         with:
           eslint-output-path: eslint-report.json
+
+      - name: Report failure
+        if: ${{ steps.linting.outcome == 'failure' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_LINT_MESSAGE_ID }}
+          message: ${{ steps.lint-comment.outputs.message }}
+          recreate: true
+
+      - name: Remove last test failure message
+        if: ${{ steps.linting.outcome != 'failure' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_LINT_MESSAGE_ID }}
+          delete: true
 
   test:
     name: Test

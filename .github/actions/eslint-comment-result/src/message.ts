@@ -76,7 +76,7 @@ function createTitle({
   if (hasOnlyErrors) {
     return `${eslintIcon} **Lint errors have been found in the codebase ❗**`
   }
-  return `${eslintIcon} **Lint warning have been found in the codebase ⚠**`
+  return `${eslintIcon} **Lint warnings have been found in the codebase ⚠**`
 }
 
 function createCodeBlockWithESLintOutput(results: ESLint.LintResult[]) {

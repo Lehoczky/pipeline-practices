@@ -3,5 +3,5 @@ test("adds 1 + 2 to equal 3", () => {
 })
 
 test("adds 2 + 2 to equal 4", () => {
-  expect(2 + 2).toBe(4)
+  expect(2 + 2).toBe(2)
 })

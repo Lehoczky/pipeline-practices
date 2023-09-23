@@ -38,10 +38,6 @@ jobs:
         id: linting
         run: pnpm lint --output-file=eslint-report.json --format=json
 
-      - name: asd
-        if: always()
-        run: echo ${{steps.linting.outcome == 'failure'}}
-
       - name: Generate comment about lint results
         if: always() && steps.linting.outcome == 'failure'
         id: lint-comment

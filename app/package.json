@@ -2,6 +2,7 @@
   "name": "app",
   "private": true,
   "scripts": {
+    "build": "tsc --project tsconfig.build.json",
     "jest": "jest"
   },
   "devDependencies": {

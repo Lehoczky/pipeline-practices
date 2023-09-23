@@ -1,12 +1,13 @@
-import { ESLint } from "eslint"
+import type { ESLint } from "eslint"
 
 import {
   createCodeBlock,
   createCollapsableBlock,
   createImage,
 } from "./markdown"
+import stylishFormatter from "./vendored"
 
-export async function createMessage(results: ESLint.LintResult[]) {
+export function createMessage(results: ESLint.LintResult[]) {
   const problematicFiles = results.filter(
     ({ errorCount, warningCount }) => errorCount > 0 || warningCount > 0,
   )
@@ -19,7 +20,7 @@ export async function createMessage(results: ESLint.LintResult[]) {
 
   const title = createTitle(accumulatedResults)
   const codeBlockWithEslintOutput =
-    await createCodeBlockWithESLintOutput(problematicFiles)
+    createCodeBlockWithESLintOutput(problematicFiles)
   const footer = createFooter(accumulatedResults)
   const FAQSection = createFrequentlyAskedQuestions()
 
@@ -78,9 +79,8 @@ function createTitle({
   return `${eslintIcon} **Lint warning have been found in the codebase ⚠**`
 }
 
-async function createCodeBlockWithESLintOutput(results: ESLint.LintResult[]) {
-  const stylishFormatter = await new ESLint().loadFormatter("stylish")
-  const stylishOutput = await stylishFormatter.format(results)
+function createCodeBlockWithESLintOutput(results: ESLint.LintResult[]) {
+  const stylishOutput = stylishFormatter(results)
   return createCodeBlock(stylishOutput, "sh")
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "eslint-comment-result",
+  "name": "eslint-aggregate-result",
   "private": true,
   "scripts": {
     "build": "ncc build src/index.ts --minify"
@@ -12,10 +12,10 @@
     "text-table": "^0.2.0"
   },
   "devDependencies": {
-    "@types/eslint": "^8.44.2",
-    "@types/node": "^18.17.18",
+    "@types/eslint": "^8.44.4",
+    "@types/node": "^20.8.6",
     "@types/text-table": "^0.2.3",
     "@vercel/ncc": "^0.38.0",
-    "typescript": "~5.1.6"
+    "typescript": "~5.2.2"
   }
 }

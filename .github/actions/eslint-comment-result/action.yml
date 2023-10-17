@@ -1,5 +1,5 @@
-name: Eslint Comment Result
-description: A GitHub action which comments the result of an eslint run to your PR.
+name: Eslint Aggregate Result
+description: A GitHub action which aggregates the result of an eslint run to your PR.
 
 inputs:
   eslint-output-path:
@@ -7,9 +7,17 @@ inputs:
     required: true
 
 outputs:
-  message:
-    description: GitHub message body in markdown
+  eslint-output:
+    description: Stylish ESLint output
+  has-errors:
+    description: Wether ESLint found any errors
+  has-warnings:
+    description: Wether ESLint found any warnings
+  is-every-error-fixable:
+    description: Whether every error is auto-fixable
+  is-every-warning-fixable:
+    description: Whether every warning is auto-fixable
 
 runs:
-  using: node16
+  using: node20
   main: dist/index.js

@@ -3,7 +3,8 @@
 - run `npm run eslint:fix` locally and commit the changes
 - if you are using [VSCode](https://code.visualstudio.com/), open the files with the errors, open the [command palette](https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_command-palette) and run the `ESLint: Fix all auto-fixable Problems` command
 - type `/ci-autofix-lint` as comment to this PR and a workflow will automatically fix these errors for you and commit the changes to the PR
-  {% endmacro %}
+
+{% endmacro %}
 
 {% if hasErrors and hasWarnings %}
 

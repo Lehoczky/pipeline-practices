@@ -1,22 +1,23 @@
-{% macro eslintIcon() -%}
-<img src="https://api.iconify.design/logos:eslint.svg" align="top" width="24">
-{% endmacro -%}
-
-<!-- prettier-ignore-start -->
 {% macro suggestions() %}
+
 - run `npm run eslint:fix` locally and commit the changes
 - if you are using [VSCode](https://code.visualstudio.com/), open the files with the errors, open the [command palette](https://code.visualstudio.com/docs/getstarted/tips-and-tricks#_command-palette) and run the `ESLint: Fix all auto-fixable Problems` command
 - type `/ci-autofix-lint` as comment to this PR and a workflow will automatically fix these errors for you and commit the changes to the PR
-{% endmacro %}
+  {% endmacro %}
 
 {% if hasErrors and hasWarnings %}
-### {{ eslintIcon() }} Lint errors and warnings have been found in the codebase ❗
+
+### <img src="https://api.iconify.design/logos:eslint.svg" align="top" width="24"> Lint errors and warnings have been found in the codebase ❗
+
 {% elif hasErrors %}
-### {{ eslintIcon() }} Lint errors have been found in the codebase ❗
+
+### <img src="https://api.iconify.design/logos:eslint.svg" align="top" width="24"> Lint errors have been found in the codebase ❗
+
 {% elif hasWarnings %}
-### {{ eslintIcon() }} Lint warnings have been found in the codebase ⚠
+
+### <img src="https://api.iconify.design/logos:eslint.svg" align="top" width="24"> Lint warnings have been found in the codebase ⚠
+
 {% endif %}
-<!-- prettier-ignore-end -->
 
 ```sh
 {{ eslintOutput }}

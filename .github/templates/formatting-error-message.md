@@ -2,7 +2,7 @@
 
 Well, gosh darnit! Don't worry though, we will try to help you out!
 
-To see which files are unformatted, look at the workflow details: {{ context.serverUrl }}/{{ context.repo }}/actions/runs/{{ context.runId }}
+To see which files are unformatted, look at the workflow details: {{ context.serverUrl }}/{{ context.repo.repo }}/actions/runs/{{ context.runId }}
 
 You can do one of the following things to solve the issue, feel free to choose based on which one is more convenient for you:
 

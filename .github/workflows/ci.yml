@@ -55,7 +55,7 @@ jobs:
           template-path: .github/templates/failed-lint-message.md
           vars: |
             {
-              "eslintOutput": "${{ toJson(steps.lint-aggregate.outputs.eslint-output)  }}",
+              "eslintOutput": ${{ toJson(steps.lint-aggregate.outputs.eslint-output) }},
               "hasErrors": "${{ steps.lint-aggregate.outputs.has-errors }}",
               "hasWarnings": "${{ steps.lint-aggregate.outputs.has-warnings }}",
               "isEveryErrorFixable": "${{ steps.lint-aggregate.outputs.is-every-error-fixable }}",

@@ -3,7 +3,6 @@
  *
  * @author Sindre Sorhus
  */
-"use strict"
 
 import table from "text-table"
 

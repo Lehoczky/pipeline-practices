@@ -175,15 +175,25 @@ jobs:
       - name: Run tests 🧪
         run: pnpm -F app jest --shard=${{ matrix.shard }}/2
 
+  test-result-summary:
+    name: Summarize test job results
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: always()
+    steps:
+      - name: Return with an error status if any of the test shards failed
+        if: needs.test.result == 'failure'
+        run: exit 1
+
   build-and-test-failure-report:
     name: Reports the failure of the build or the test job
     runs-on: ubuntu-latest
-    needs: [build, test]
+    needs: [build, test-result-summary]
     if: always()
     steps:
       # Build and test failed
       - name: Create Message for build and test failure
-        if: needs.test.result == 'failure' && needs.build.result == 'failure'
+        if: needs.test-result-summary.result == 'failure' && needs.build.result == 'failure'
         id: build-and-test-failure-message
         uses: Lehoczky/render-nunjucks-template-action@v1.0.0
         with:
@@ -191,7 +201,7 @@ jobs:
           auto-escape: false
           trim-blocks: true
       - name: Report build and test failure
-        if: needs.test == 'failure' && needs.build.result == 'failure'
+        if: needs.test-result-summary.result == 'failure' && needs.build.result == 'failure'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
@@ -200,7 +210,7 @@ jobs:
 
       # Build failed
       - name: Create Message for build failure
-        if: needs.test.result != 'failure' && needs.build.result == 'failure'
+        if: needs.test-result-summary.result != 'failure' && needs.build.result == 'failure'
         id: build-failure-message
         uses: Lehoczky/render-nunjucks-template-action@v1.0.0
         with:
@@ -208,7 +218,7 @@ jobs:
           auto-escape: false
           trim-blocks: true
       - name: Report build failure
-        if: needs.test.result != 'failure' && needs.build.result == 'failure'
+        if: needs.test-result-summary.result != 'failure' && needs.build.result == 'failure'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
@@ -217,7 +227,7 @@ jobs:
 
       # Test failed
       - name: Create Message for test failure
-        if: needs.test.result == 'failure' && needs.build.result != 'failure'
+        if: needs.test-result-summary.result == 'failure' && needs.build.result != 'failure'
         id: test-failure-message
         uses: Lehoczky/render-nunjucks-template-action@v1.0.0
         with:
@@ -225,7 +235,7 @@ jobs:
           auto-escape: false
           trim-blocks: true
       - name: Report test failure
-        if: needs.test.result == 'failure' && needs.build.result != 'failure'
+        if: needs.test-result-summary.result == 'failure' && needs.build.result != 'failure'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
@@ -234,7 +244,7 @@ jobs:
 
       # Everything is fine
       - name: Remove last failure message if everything is right
-        if: needs.test.result != 'failure' && needs.build.result != 'failure'
+        if: needs.test-result-summary.result != 'failure' && needs.build.result != 'failure'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}

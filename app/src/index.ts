@@ -1,1 +1,1 @@
-const _a = 100000
+const _a = 10

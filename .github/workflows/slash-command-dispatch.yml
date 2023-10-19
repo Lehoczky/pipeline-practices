@@ -1,0 +1,19 @@
+name: Slash Command Dispatch
+
+on:
+  issue_comment:
+    types:
+      - created
+
+jobs:
+  slash-command-dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slash Command Dispatch
+        uses: peter-evans/slash-command-dispatch@v3
+        with:
+          token: ${{ secrets.ZOLTAN_PERSONAL_ACCESS_TOKEN }}
+          commands: |
+            ci-autofix-format
+            ci-autofix-lint
+          issue-type: pull-request

@@ -6,12 +6,18 @@ on:
       - ci-autofix-format-command
 
 jobs:
-  eslint:
+  prettier:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump the client payload context
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload) }}
+        run: echo "$PAYLOAD_CONTEXT"
+
       - name: Set latest commit status as pending 🟡
         uses: myrotvorets/set-commit-status-action@master
         with:
+          sha: ${{ github.event.client_payload.pull_request.head.head_sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           status: pending
 

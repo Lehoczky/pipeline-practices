@@ -17,6 +17,7 @@ env:
 
 jobs:
   changes:
+    name: Check which files have been changed
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -47,236 +48,241 @@ jobs:
               - "**/tsconfig*.json"
               - "pnpm-lock.yaml"
 
-  # lint:
-  #   name: Lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out Git repository ⏬
-  #       uses: actions/checkout@v3
+      - name: Show change categroies
+        run: echo "${{ toJson(steps.filter.outputs) }}"
 
-  #     - name: Enable Corepack
-  #       run: corepack enable
+  lint:
+    name: Lint
+    needs: changes
+    if: ${{ needs.changes.outputs.lint == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
 
-  #     - name: Set up Node.js 💿
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
-  #         cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
 
-  #     - name: Install dependencies 💤
-  #       run: pnpm install
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
 
-  #     - name: Run linting 🧹
-  #       id: linting
-  #       run: pnpm lint:check --output-file=eslint-report.json --format=json
+      - name: Install dependencies 💤
+        run: pnpm install
 
-  #     # Failure handling
-  #     - name: Aggregate lint results
-  #       if: always() && steps.linting.outcome == 'failure'
-  #       id: lint-aggregate
-  #       uses: ./.github/actions/eslint-comment-result
-  #       with:
-  #         eslint-output-path: eslint-report.json
+      - name: Run linting 🧹
+        id: linting
+        run: pnpm lint:check --output-file=eslint-report.json --format=json
 
-  #     - name: Create message for lint failure
-  #       if: always() && steps.linting.outcome == 'failure'
-  #       id: message
-  #       uses: Lehoczky/render-nunjucks-template-action@v1.0.0
-  #       with:
-  #         template-path: .github/templates/failed-lint-message.md
-  #         vars: |
-  #           {
-  #             "eslintOutput": ${{ toJson(steps.lint-aggregate.outputs.eslint-output) }},
-  #             "hasErrors": "${{ steps.lint-aggregate.outputs.has-errors }}",
-  #             "hasWarnings": "${{ steps.lint-aggregate.outputs.has-warnings }}",
-  #             "isEveryErrorFixable": "${{ steps.lint-aggregate.outputs.is-every-error-fixable }}",
-  #             "isEveryWarningFixable": "${{ steps.lint-aggregate.outputs.is-every-warning-fixable }}"
-  #           }
-  #         auto-escape: false
-  #         trim-blocks: true
+      # Failure handling
+      - name: Aggregate lint results
+        if: always() && steps.linting.outcome == 'failure'
+        id: lint-aggregate
+        uses: ./.github/actions/eslint-comment-result
+        with:
+          eslint-output-path: eslint-report.json
 
-  #     - name: Report lint failure
-  #       if: always() && steps.linting.outcome == 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_LINT_MESSAGE_ID }}
-  #         message: ${{ steps.message.outputs.result }}
-  #         recreate: true
+      - name: Create message for lint failure
+        if: always() && steps.linting.outcome == 'failure'
+        id: message
+        uses: Lehoczky/render-nunjucks-template-action@v1.0.0
+        with:
+          template-path: .github/templates/failed-lint-message.md
+          vars: |
+            {
+              "eslintOutput": ${{ toJson(steps.lint-aggregate.outputs.eslint-output) }},
+              "hasErrors": "${{ steps.lint-aggregate.outputs.has-errors }}",
+              "hasWarnings": "${{ steps.lint-aggregate.outputs.has-warnings }}",
+              "isEveryErrorFixable": "${{ steps.lint-aggregate.outputs.is-every-error-fixable }}",
+              "isEveryWarningFixable": "${{ steps.lint-aggregate.outputs.is-every-warning-fixable }}"
+            }
+          auto-escape: false
+          trim-blocks: true
 
-  #     - name: Remove last lint failure message
-  #       if: always() && steps.linting.outcome != 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_LINT_MESSAGE_ID }}
-  #         delete: true
+      - name: Report lint failure
+        if: always() && steps.linting.outcome == 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_LINT_MESSAGE_ID }}
+          message: ${{ steps.message.outputs.result }}
+          recreate: true
 
-  # check-formatting:
-  #   name: Check formatting with prettier
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out Git repository ⏬
-  #       uses: actions/checkout@v3
+      - name: Remove last lint failure message
+        if: always() && steps.linting.outcome != 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_LINT_MESSAGE_ID }}
+          delete: true
 
-  #     - name: Enable Corepack
-  #       run: corepack enable
+  check-formatting:
+    name: Check formatting with prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
 
-  #     - name: Set up Node.js 💿
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
-  #         cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
 
-  #     - name: Install dependencies 💤
-  #       run: pnpm install
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
 
-  #     - name: Check formatting 🎨
-  #       id: formatting
-  #       run: pnpm format:check
+      - name: Install dependencies 💤
+        run: pnpm install
 
-  #     # Failure handling
-  #     - name: Create message for formatting failure
-  #       if: always() && steps.formatting.outcome == 'failure'
-  #       id: message
-  #       uses: Lehoczky/render-nunjucks-template-action@v1.0.0
-  #       with:
-  #         template-path: .github/templates/failed-formatting-message.md
-  #         auto-escape: false
-  #         trim-blocks: true
+      - name: Check formatting 🎨
+        id: formatting
+        run: pnpm format:check
 
-  #     - name: Report formatting failure
-  #       if: always() && steps.formatting.outcome == 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_FORMATTING_MESSAGE_ID }}
-  #         message: ${{ steps.message.outputs.result }}
-  #         recreate: true
+      # Failure handling
+      - name: Create message for formatting failure
+        if: always() && steps.formatting.outcome == 'failure'
+        id: message
+        uses: Lehoczky/render-nunjucks-template-action@v1.0.0
+        with:
+          template-path: .github/templates/failed-formatting-message.md
+          auto-escape: false
+          trim-blocks: true
 
-  #     - name: Remove last formatting failure message if everything went fine
-  #       if: always() && steps.formatting.outcome != 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_FORMATTING_MESSAGE_ID }}
-  #         delete: true
+      - name: Report formatting failure
+        if: always() && steps.formatting.outcome == 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_FORMATTING_MESSAGE_ID }}
+          message: ${{ steps.message.outputs.result }}
+          recreate: true
 
-  # build:
-  #   name: Build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out Git repository ⏬
-  #       uses: actions/checkout@v3
+      - name: Remove last formatting failure message if everything went fine
+        if: always() && steps.formatting.outcome != 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_FORMATTING_MESSAGE_ID }}
+          delete: true
 
-  #     - name: Enable Corepack
-  #       run: corepack enable
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
 
-  #     - name: Set up Node.js 💿
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
-  #         cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
 
-  #     - name: Install dependencies 💤
-  #       run: pnpm install
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
 
-  #     - name: Build the app 👷‍♂️
-  #       run: pnpm -F app build
+      - name: Install dependencies 💤
+        run: pnpm install
 
-  # test:
-  #   name: Test
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       shard: [1, 2]
-  #   steps:
-  #     - name: Check out Git repository ⏬
-  #       uses: actions/checkout@v3
+      - name: Build the app 👷‍♂️
+        run: pnpm -F app build
 
-  #     - name: Enable Corepack
-  #       run: corepack enable
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
 
-  #     - name: Set up Node.js 💿
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
-  #         cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
 
-  #     - name: Install dependencies 💤
-  #       run: pnpm install
+      - name: Set up Node.js 💿
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
 
-  #     - name: Run tests 🧪
-  #       run: pnpm -F app jest --shard=${{ matrix.shard }}/2
+      - name: Install dependencies 💤
+        run: pnpm install
 
-  # test-result-summary:
-  #   name: Summarize test job results
-  #   runs-on: ubuntu-latest
-  #   needs: [test]
-  #   if: always()
-  #   steps:
-  #     - name: Return with an error status if any of the test shards failed
-  #       if: needs.test.result == 'failure'
-  #       run: exit 1
+      - name: Run tests 🧪
+        run: pnpm -F app jest --shard=${{ matrix.shard }}/2
 
-  # build-and-test-failure-report:
-  #   name: Reports the failure of the build or the test job
-  #   runs-on: ubuntu-latest
-  #   needs: [build, test-result-summary]
-  #   if: always()
-  #   steps:
-  #     # Build and test failed
-  #     - name: Create Message for build and test failure
-  #       if: needs.test-result-summary.result == 'failure' && needs.build.result == 'failure'
-  #       id: build-and-test-failure-message
-  #       uses: Lehoczky/render-nunjucks-template-action@v1.0.0
-  #       with:
-  #         template-path: .github/templates/failed-build-and-test-message.md
-  #         auto-escape: false
-  #         trim-blocks: true
-  #     - name: Report build and test failure
-  #       if: needs.test-result-summary.result == 'failure' && needs.build.result == 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
-  #         message: ${{ steps.build-and-test-failure-message.outputs.result }}
-  #         recreate: true
+  test-result-summary:
+    name: Summarize test job results
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: always()
+    steps:
+      - name: Return with an error status if any of the test shards failed
+        if: needs.test.result == 'failure'
+        run: exit 1
 
-  #     # Build failed
-  #     - name: Create Message for build failure
-  #       if: needs.test-result-summary.result != 'failure' && needs.build.result == 'failure'
-  #       id: build-failure-message
-  #       uses: Lehoczky/render-nunjucks-template-action@v1.0.0
-  #       with:
-  #         template-path: .github/templates/failed-build-message.md
-  #         auto-escape: false
-  #         trim-blocks: true
-  #     - name: Report build failure
-  #       if: needs.test-result-summary.result != 'failure' && needs.build.result == 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
-  #         message: ${{ steps.build-failure-message.outputs.result }}
-  #         recreate: true
+  build-and-test-failure-report:
+    name: Reports the failure of the build or the test job
+    runs-on: ubuntu-latest
+    needs: [build, test-result-summary]
+    if: always()
+    steps:
+      # Build and test failed
+      - name: Create Message for build and test failure
+        if: needs.test-result-summary.result == 'failure' && needs.build.result == 'failure'
+        id: build-and-test-failure-message
+        uses: Lehoczky/render-nunjucks-template-action@v1.0.0
+        with:
+          template-path: .github/templates/failed-build-and-test-message.md
+          auto-escape: false
+          trim-blocks: true
+      - name: Report build and test failure
+        if: needs.test-result-summary.result == 'failure' && needs.build.result == 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
+          message: ${{ steps.build-and-test-failure-message.outputs.result }}
+          recreate: true
 
-  #     # Test failed
-  #     - name: Create Message for test failure
-  #       if: needs.test-result-summary.result == 'failure' && needs.build.result != 'failure'
-  #       id: test-failure-message
-  #       uses: Lehoczky/render-nunjucks-template-action@v1.0.0
-  #       with:
-  #         template-path: .github/templates/failed-test-message.md
-  #         auto-escape: false
-  #         trim-blocks: true
-  #     - name: Report test failure
-  #       if: needs.test-result-summary.result == 'failure' && needs.build.result != 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
-  #         message: ${{ steps.test-failure-message.outputs.result }}
-  #         recreate: true
+      # Build failed
+      - name: Create Message for build failure
+        if: needs.test-result-summary.result != 'failure' && needs.build.result == 'failure'
+        id: build-failure-message
+        uses: Lehoczky/render-nunjucks-template-action@v1.0.0
+        with:
+          template-path: .github/templates/failed-build-message.md
+          auto-escape: false
+          trim-blocks: true
+      - name: Report build failure
+        if: needs.test-result-summary.result != 'failure' && needs.build.result == 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
+          message: ${{ steps.build-failure-message.outputs.result }}
+          recreate: true
 
-  #     # Everything is fine
-  #     - name: Remove last failure message if everything is right
-  #       if: needs.test-result-summary.result != 'failure' && needs.build.result != 'failure'
-  #       uses: marocchino/sticky-pull-request-comment@v2
-  #       with:
-  #         header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
-  #         delete: true
+      # Test failed
+      - name: Create Message for test failure
+        if: needs.test-result-summary.result == 'failure' && needs.build.result != 'failure'
+        id: test-failure-message
+        uses: Lehoczky/render-nunjucks-template-action@v1.0.0
+        with:
+          template-path: .github/templates/failed-test-message.md
+          auto-escape: false
+          trim-blocks: true
+      - name: Report test failure
+        if: needs.test-result-summary.result == 'failure' && needs.build.result != 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
+          message: ${{ steps.test-failure-message.outputs.result }}
+          recreate: true
+
+      # Everything is fine
+      - name: Remove last failure message if everything is right
+        if: needs.test-result-summary.result != 'failure' && needs.build.result != 'failure'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ${{ env.STICKY_BUILD_AND_TEST_MESSAGE_ID }}
+          delete: true

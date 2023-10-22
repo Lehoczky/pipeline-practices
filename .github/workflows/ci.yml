@@ -33,7 +33,7 @@ jobs:
         id: filter
         with:
           filters: .github/file-filters.yml
-      - run: echo "${{steps.filter.outputs}}"
+      - run: echo "${{toJson(steps.filter.outputs.changes)}}"
 
   # lint:
   #   name: Lint

@@ -16,8 +16,45 @@ env:
   STICKY_BUILD_AND_TEST_MESSAGE_ID: test-or-build-failure
 
 jobs:
+  changes:
+    name: Check which files have been changed
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      lint: ${{ steps.filter.outputs.lint }}
+      src: ${{ steps.filter.outputs.src }}
+      test: ${{ steps.filter.outputs.test }}
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
+
+      - name: Get changed file categories
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            lint:
+              - "**/*.{js,ts,cjs,mjs}"
+              - "**/tsconfig*.json"
+              - ".eslint*"
+              - "pnpm-lock.yaml"
+            src:
+              - "app/**/!(*.test).{js,ts,mjs,cjs}"
+              - "**/tsconfig*.json"
+              - "pnpm-lock.yaml"
+            test:
+              - "app/**/*.{js,ts,cjs,mjs}"
+              - "**/tsconfig*.json"
+              - "pnpm-lock.yaml"
+
+      - name: Show change categroies
+        run: echo "${{ toJson(steps.filter.outputs) }}"
+
   lint:
     name: Lint
+    needs: changes
+    if: ${{ needs.changes.outputs.lint == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository ⏬
@@ -129,6 +166,8 @@ jobs:
 
   build:
     name: Build
+    needs: changes
+    if: ${{ needs.changes.outputs.src == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository ⏬
@@ -151,6 +190,8 @@ jobs:
 
   test:
     name: Test
+    needs: changes
+    if: ${{ needs.changes.outputs.test == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -178,8 +219,10 @@ jobs:
   test-result-summary:
     name: Summarize test job results
     runs-on: ubuntu-latest
-    needs: [test]
-    if: always()
+    needs:
+      - changes
+      - test
+    if: always() && needs.changes.outputs.test == 'true'
     steps:
       - name: Return with an error status if any of the test shards failed
         if: needs.test.result == 'failure'

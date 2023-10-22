@@ -1,0 +1,14 @@
+lint:
+  - "**/*.{js,ts,cjs,mjs}"
+  - "**/tsconfig*.json"
+  - ".eslint*"
+  - "package.json"
+src:
+  - "app/**/*.{js,ts,cjs,mjs}"
+  - "!(app/**/*.test.ts)"
+  - "**/tsconfig*.json"
+  - "package.json"
+test:
+  - app/'**/*.{js,ts,cjs,mjs}'
+  - "**/tsconfig*.json"
+  - "package.json"

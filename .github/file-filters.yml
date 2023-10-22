@@ -9,6 +9,6 @@ src:
   - "**/tsconfig*.json"
   - "package.json"
 test:
-  - app/'**/*.{js,ts,cjs,mjs}'
+  - "app/**/*.{js,ts,cjs,mjs}"
   - "**/tsconfig*.json"
   - "package.json"

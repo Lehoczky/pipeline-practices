@@ -140,6 +140,7 @@ jobs:
         with:
           path: ./node_modules/.cache/prettier
           key: ${{ runner.os }}-prettier-${{ hashFiles('pnpm-lock.yaml','.prettierrc.json','.prettierignore') }}
+          restore-keys: ${{ runner.os }}-prettier-
 
       - name: Check formatting 🎨
         id: formatting

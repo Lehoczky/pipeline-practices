@@ -166,6 +166,8 @@ jobs:
 
   build:
     name: Build
+    needs: changes
+    if: ${{ needs.changes.outputs.src == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository ⏬
@@ -188,6 +190,8 @@ jobs:
 
   test:
     name: Test
+    needs: changes
+    if: ${{ needs.changes.outputs.test == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

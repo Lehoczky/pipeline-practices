@@ -25,6 +25,9 @@ jobs:
       src: ${{ steps.filter.outputs.src }}
       test: ${{ steps.filter.outputs.test }}
     steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v3
+
       - name: Get changed file categories
         uses: dorny/paths-filter@v2
         id: filter

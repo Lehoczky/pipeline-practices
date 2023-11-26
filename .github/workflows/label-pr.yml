@@ -1,0 +1,19 @@
+name: Label PR
+
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - master
+      - 2.x
+
+jobs:
+  label-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR target
+        run: echo ${{github.event.pull_request.base.label}}
+
+      - name: PR Number
+        run: echo ${{github.event.pull_request.number}}

@@ -33,7 +33,7 @@ jobs:
                 repo: context.repo.repo,
                 labels: ["enhancement"]
               })
-            } else if(baseLabel === Lehoczky:asd) {
+            } else if(baseLabel === "Lehoczky:asd") {
               github.rest.issues.addLabels({
                 issue_number: PRNumber,
                 owner: context.repo.owner,

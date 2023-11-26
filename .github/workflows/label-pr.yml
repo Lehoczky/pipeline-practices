@@ -9,7 +9,7 @@ on:
       - 2.x
 
 jobs:
-  label-pr:
+  add-pr-label:
     name: Add PR label
     runs-on: ubuntu-latest
     permissions:

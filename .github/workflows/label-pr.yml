@@ -23,8 +23,8 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const baseLabel = ${{github.event.pull_request.base.label}}
-            const PRNumber = ${{github.event.pull_request.number}}
+            const baseLabel = "${{github.event.pull_request.base.label}}"
+            const PRNumber = "${{github.event.pull_request.number}}"
 
             if(baseLabel === "Lehoczky:2.x") {
               github.rest.issues.addLabels({

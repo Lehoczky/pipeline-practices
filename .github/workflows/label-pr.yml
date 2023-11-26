@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: PR target
-        run: echo ${{toJson(github.event.pull_request.base) }}
+        run: echo ${{github.event.pull_request.base }}
 
       - name: PR Number
         run: echo ${{github.event.pull_request.number}}

@@ -66,7 +66,7 @@ We also recommend you to enable formatting on file saves by adding the following
 {
   "editor.formatOnSave": true,
   // format on paste can be annoying, feel free to disable or enable it.
-  "editor.formatOnPaste": false
+  "editor.formatOnPaste": false,
 }
 ```
 

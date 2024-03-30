@@ -30,7 +30,7 @@ jobs:
         if: always() && (steps.has_linked_issues.outputs.result == 'false')
         with:
           header: pr-linked-issue-warning
-          message: There are not linked issues
+          message: There are no linked issues
 
       - if: always() && (steps.has_linked_issues.outputs.result != 'false')
         uses: marocchino/sticky-pull-request-comment@v2

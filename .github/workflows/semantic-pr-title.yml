@@ -29,7 +29,7 @@ jobs:
           template-path: .github/templates/failed-semantic-pr.md
           vars: |
             {
-              "errorMessage": ${{ steps.lint_pr_title.outputs.error_message }},
+              "errorMessage": ${{ toJson(steps.lint_pr_title.outputs.error_message) }},
             }
           auto-escape: false
           trim-blocks: true

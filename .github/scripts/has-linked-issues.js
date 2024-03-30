@@ -1,7 +1,7 @@
 // @ts-check
 
 /** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
-export default async ({ context, github }) => {
+module.exports = async ({ context, github }) => {
   const { eventName, payload, repo } = context
 
   if (eventName !== "pull_request_target" && eventName !== "pull_request") {

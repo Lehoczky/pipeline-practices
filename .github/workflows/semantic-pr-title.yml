@@ -20,25 +20,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Failure handling
-      - name: Create message for failure
-        if: always() && (steps.lint_pr_title.outputs.error_message != null)
-        id: message
-        uses: Lehoczky/render-nunjucks-template-action@v1.0.0
-        with:
-          template-path: .github/templates/failed-semantic-pr.md
-          vars: |
-            {
-              "errorMessage": ${{ toJson(steps.lint_pr_title.outputs.error_message) }}
-            }
-          auto-escape: false
-          trim-blocks: true
-
       - uses: marocchino/sticky-pull-request-comment@v2
         if: always() && (steps.lint_pr_title.outputs.error_message != null)
         with:
           header: pr-title-lint-error
-          message: ${{ steps.message.outputs.result }}
+          message: |
+            Hey there and thank you for opening this pull request! 👋🏼
+
+            We require pull request titles to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) and it looks like your proposed title needs to be adjusted.
+
+            Details:
+
+            ```
+            ${{ steps.lint_pr_title.outputs.error_message }}
+            ```
 
       - if: ${{ steps.lint_pr_title.outputs.error_message == null }}
         uses: marocchino/sticky-pull-request-comment@v2

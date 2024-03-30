@@ -66,7 +66,7 @@ jobs:
       - name: Set up Node.js 💿
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version-file: ".node-version"
           cache: pnpm
 
       - name: Install dependencies 💤
@@ -129,7 +129,7 @@ jobs:
       - name: Set up Node.js 💿
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version-file: ".node-version"
           cache: pnpm
 
       - name: Install dependencies 💤
@@ -186,7 +186,7 @@ jobs:
       - name: Set up Node.js 💿
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version-file: ".node-version"
           cache: pnpm
 
       - name: Install dependencies 💤
@@ -214,7 +214,7 @@ jobs:
       - name: Set up Node.js 💿
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version-file: ".node-version"
           cache: pnpm
 
       - name: Install dependencies 💤

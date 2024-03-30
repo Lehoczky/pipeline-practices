@@ -27,5 +27,6 @@ module.exports = async ({ context, github }) => {
     repositoryName: repo.repo,
   }
 
-  return await github.graphql(query, variables)
+  const response = await github.graphql(query, variables)
+  return response.repository.pullRequest.closingIssuesReferences
 }

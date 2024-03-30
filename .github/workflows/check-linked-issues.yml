@@ -1,0 +1,39 @@
+name: "Check Linked Issues"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+permissions:
+  pull-requests: write
+
+jobs:
+  main:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository ⏬
+        uses: actions/checkout@v4
+
+      - uses: actions/github-script@v7
+        id: has_linked_issues
+        with:
+          result-encoding: string
+          script: |
+            const script = require('./.github/scripts/has-linked-issues.cjs')
+            return await script({ context, github })
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: always() && (steps.has_linked_issues.outputs.result == 'false')
+        with:
+          header: pr-linked-issue-warning
+          message: There are no linked issues
+
+      - if: always() && (steps.has_linked_issues.outputs.result != 'false')
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pr-linked-issue-warning
+          delete: true

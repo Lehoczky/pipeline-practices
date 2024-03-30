@@ -28,5 +28,6 @@ module.exports = async ({ context, github }) => {
   }
 
   const response = await github.graphql(query, variables)
-  return response.repository.pullRequest.closingIssuesReferences.nodes
+  const issues = response.repository.pullRequest.closingIssuesReferences.nodes
+  return Boolean(issues.length)
 }

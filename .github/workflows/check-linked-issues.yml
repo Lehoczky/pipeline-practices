@@ -19,7 +19,21 @@ jobs:
         uses: actions/checkout@v4
 
       - uses: actions/github-script@v7
+        id: has_linked_issues
         with:
+          result-encoding: string
           script: |
             const script = require('./.github/scripts/has-linked-issues.cjs')
-            console.log(await script({github, context}))
+            return await script({ context, github })
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: always() && (steps.has_linked_issues.outputs.result == 'false')
+        with:
+          header: pr-linked-issue-warning
+          message: There are not linked issues
+
+      - if: always() && (steps.has_linked_issues.outputs.result != 'false')
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pr-linked-issue-warning
+          delete: true

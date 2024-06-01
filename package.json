@@ -8,14 +8,14 @@
     "lint:fix": "eslint ./app/src --ext .js,.ts --max-warnings=0 --fix"
   },
   "devDependencies": {
-    "@lehoczky/eslint-config-typescript": "^1.2.4",
-    "@lehoczky/markdownlint-config": "^1.1.3",
-    "@lehoczky/prettier-config": "^1.1.5",
+    "@lehoczky/eslint-config-typescript": "^1.2.5",
+    "@lehoczky/markdownlint-config": "^1.1.4",
+    "@lehoczky/prettier-config": "^1.1.6",
     "@types/github-script": "github:actions/github-script",
     "eslint": "^8.57.0",
-    "eslint-define-config": "^1.24.1",
-    "markdownlint-cli2": "^0.12.1",
+    "markdownlint-cli2": "^0.13.0",
     "prettier": "^3.2.5",
-    "typescript": "~5.3.3"
-  }
+    "typescript": "~5.4.5"
+  },
+  "packageManager": "pnpm@9.1.4"
 }

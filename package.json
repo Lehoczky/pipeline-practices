@@ -1,5 +1,5 @@
 {
-  "name": "pipeline-practices",
+  "name": "pipeline-practices-josh-testing",
   "private": true,
   "scripts": {
     "format:check": "prettier . --check --ignore-unknown --cache",
